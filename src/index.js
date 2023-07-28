@@ -43,7 +43,7 @@ const pizzaData = [
     ingredients: "Tomato, mozarella, ham, aragula, and burrata cheese",
     price: 18,
     photoName: "pizzas/prosciutto.jpg",
-    soldOut: false,
+    soldOut: true,
   },
 ];
 
@@ -69,26 +69,25 @@ function Menu() {
   return (
     <main className="menu">
       <h2>Our menu</h2>
-      <div className="pizzas">
-        <ul>
-          {pizzaData.map((pizza) => (
-            <Pizza pizzaObj={pizza} key={pizza.name} />
-          ))}
-        </ul>
-      </div>
+
+      <ul className="pizzas">
+        {pizzaData.map((pizza) => (
+          <Pizza pizzaObj={pizza} key={pizza.name} />
+        ))}
+      </ul>
     </main>
   );
 }
 
-function Pizza(props) {
-  console.log(props);
+function Pizza({ pizzaObj }) {
+  if (pizzaObj.soldOut) return "No pizza";
   return (
     <li className="pizza">
-      <img alt="focaccia" src={props.pizzaObj.photoName} />
+      <img alt="focaccia" src={pizzaObj.photoName} />
       <div>
-        <h3>{props.pizzaObj.name}</h3>
-        <p>{props.pizzaObj.ingredients}</p>
-        <span>{props.pizzaObj.price}</span>
+        <h3>{pizzaObj.name}</h3>
+        <p>{pizzaObj.ingredients}</p>
+        <span>{pizzaObj.price}</span>
       </div>
     </li>
   );
@@ -97,16 +96,31 @@ function Pizza(props) {
 function Footer() {
   const hours = new Date().getHours();
   const openHours = 8;
-  const closeHours = 21;
+  const closeHours = 22;
   const isOpen = hours >= openHours && hours <= closeHours;
   console.log(isOpen);
 
   return (
     <footer className="footer">
-      {new Date().toLocaleDateString()} We're currently open
+      {isOpen === true ? (
+        <Order closeHours={closeHours} />
+      ) : (
+        <div>We are closed until {openHours}:00. Come back later!</div>
+      )}
     </footer>
   );
   //return React.createElement("footer", null, "We are currently open");
+}
+
+function Order(props) {
+  return (
+    <div className="order">
+      <p>
+        We are open untill {props.closeHours}:00. Come visit us or order online!{" "}
+      </p>
+      <button className="btn">Order</button>
+    </div>
+  );
 }
 
 //React v18
